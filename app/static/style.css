@@ -8,19 +8,9 @@ body {
     margin: 0;
     width: 100%;
 }
-h1 {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: #17363f;
-    margin: 1rem 0;
-}
 a {
     color: #17363f;
 }
-hr {
-    border: none;
-    border-top: 1px solid lightgray;
-}
-
 .nav-wrapper {
     background-color: #17363f;
     width: 100%;
@@ -46,31 +36,65 @@ nav h1 a {
     justify-content: center;
     align-items: center;
 }
-nav ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-}
-
-nav ul li span {
-    color: #f3f1eb;
-}
-
-nav ul li a {
-    color: #f3f1eb;
-    display: flex;
-    align-items: center;
-}
 
 nav ul li span, header .action {
     display: block;
     padding: 0.5rem;
 }
+
 .flash {
-    margin: 1em 0;
     padding: 1em;
-    background: #f3f1eb;
-    border: 1px solid #17363f;
+    background: #1e5b58;
+    border: 1px solid #f3f1eb;
+    color: #efeadf;
+}
+
+.content {
+    max-width: 960px;
+    padding: 0 1rem 1rem;
+    margin: 0 auto;
+    background-color: #efeadf;
+}
+
+.content:last-child {
+    margin-bottom: 0;
+}
+
+.content form {
+    margin: 1em 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.content label {
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.chat-title {
+    text-align: center;
+}
+
+.chat-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.chat-form {
+    display: flex;
+    justify-content: center;
+    width: 50%;
+}
+
+.chat-form input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.chat-button {
+    background-color: #17363f;
+    color: #f3f1eb;
 }

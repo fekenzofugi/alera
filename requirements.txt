@@ -1,2 +1,6 @@
-flask==3.1.0
-gunicorn==23.0.0
+flask
+gunicorn
+langchain
+langchainhub
+langchain-community
+langchain-ollama

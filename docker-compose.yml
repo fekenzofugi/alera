@@ -4,10 +4,36 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - ollama
     ports:
       - "5000:5000"
+    networks:
+      - portaai
+
+  ollama:
+    volumes:
+      - ./ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0:11434
+    networks:
+      - portaai
     deploy:
       resources:
         reservations:
           devices:
-            - capabilities: [gpu]
+            - driver: "nvidia"
+              count: 1
+              capabilities: ["gpu"]
+
+networks:
+  portaai:
+    external: false

@@ -5,7 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <div>
-        
+    <div class="chat-wrapper">
+        <form class="chat-form" method="post">
+            <label for="user_input">Enter an input:</label>
+            <input type="text" name="user_input">    
+            <input class="chat-button" type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div class="chat-answer">
+        <p>
+            {{ response }}
+        </p>
     </div>
 {% endblock %}

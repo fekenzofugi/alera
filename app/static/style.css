@@ -1,0 +1,76 @@
+html {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #f3f1eb;
+    background-size: cover;
+    min-height: 100vh;
+}
+body {
+    margin: 0;
+    width: 100%;
+}
+h1 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #17363f;
+    margin: 1rem 0;
+}
+a {
+    color: #17363f;
+}
+hr {
+    border: none;
+    border-top: 1px solid lightgray;
+}
+
+.nav-wrapper {
+    background-color: #17363f;
+    width: 100%;
+}
+
+nav {
+    background-color: #17363f;
+    max-width: 960px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+nav h1 {
+    margin: 0;
+}
+nav h1 a {
+    text-decoration: none;
+    color: #f3f1eb !important;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+nav ul li span {
+    color: #f3f1eb;
+}
+
+nav ul li a {
+    color: #f3f1eb;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li span, header .action {
+    display: block;
+    padding: 0.5rem;
+}
+.flash {
+    margin: 1em 0;
+    padding: 1em;
+    background: #f3f1eb;
+    border: 1px solid #17363f;
+}

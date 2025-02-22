@@ -1,0 +1,13 @@
+services:
+  portaai_web:
+    container_name: portaai_web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]

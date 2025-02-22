@@ -1,0 +1,1 @@
+from app.main.views import main_bp

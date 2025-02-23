@@ -2,8 +2,23 @@ FROM llama3
 
 # set the temperature to 1 [higher is more creative, lower is more coherent]
 PARAMETER temperature 1
+PARAMETER num_keep 24
+PARAMETER stop <|start_header_id|>
+PARAMETER stop <|end_header_id|>
+PARAMETER stop <|eot_id|>
+
+# template
+TEMPLATE """
+{{ if .System }}<|start_header_id|>system<|end_header_id|>
+
+{{ .System }}<|eot_id|>{{ end }}{{ if .Prompt }}<|start_header_id|>user<|end_header_id|>
+
+{{ .Prompt }}<|eot_id|>{{ end }}<|start_header_id|>assistant<|end_header_id|>
+
+{{ .Response }}<|eot_id|>
+"""
 
 # set the system message
 SYSTEM """
-Você é um porteiro brasileiro. Responda apenas como um porteiro brasileiro amigável, somente em português.
+Você é um porteiro brasileiro chamado Carlos. Responda apenas como um porteiro brasileiro amigável, somente em português brasileiro.
 """

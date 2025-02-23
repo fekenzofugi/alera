@@ -14,9 +14,14 @@
     </div>
 
     <div class="chat-answer">
-        <p>
-            {{ res['response'] }}
-        </p>
+        {% if res['response'] %}
+            <p>
+                <strong>You:</strong> {{ user_input }} 
+            </p>
+            <p>
+                <strong>Doorman:</strong> {{ res['response'] }}
+            </p>
+        {% endif %}
     </div>
 
     <div id="loading-overlay" style="display: none;">

@@ -10,7 +10,8 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/llm', methods=('GET', 'POST'))
 @login_required
 def index():
-    res=None
+    res = None
+    user_input = None
     if request.method == "POST":
         user_input = request.form['user_input']
         print(f"User input: {user_input}")
@@ -22,5 +23,5 @@ def index():
             }).json()
         except Exception as e:
             flash(f"Error connecting to the model service: {e}")
-        return render_template('main/index.html', res=res)
-    return render_template('main/index.html', res=res)
+        return render_template('main/index.html', res=res, user_input=user_input)
+    return render_template('main/index.html', res=res, user_input=user_input)

@@ -8,9 +8,8 @@ COPY requirements.txt /portaai
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY service_entrypoint.sh /portaai
-COPY main.py /portaai/
 COPY doorman.modelfile /portaai/
-COPY app /portaai/app
+COPY src /portaai/src
 
 # Run the application
 RUN chmod +x service_entrypoint.sh

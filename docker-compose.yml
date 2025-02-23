@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile.app
     depends_on:
       - ollama
+      - db
+      - redis
     ports:
       - "5000:5000"
     networks:
@@ -36,6 +38,32 @@ services:
               count: 1
               capabilities: ["gpu"]
 
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - portaai
+  
+  db:
+    container_name: db
+    image: postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: portaai_user
+      POSTGRES_PASSWORD: portaai_password
+      POSTGRES_DB: portaai_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - portaai
+
 networks:
   portaai:
     external: false
+
+volumes:
+  db_data:

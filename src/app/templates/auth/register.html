@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="chat-title">{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="chat-wrapper">
+  <form class="chat-form" method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" autocomplete="off" required>
+  
+    <label for="email">E-mail:</label>
+    <input name="email" id="email" required>
+  
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    
+    <input class="chat-button" type="submit" value="Register">
+  </form>
+</div>
+{% endblock %}

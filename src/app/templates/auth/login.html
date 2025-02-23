@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="chat-title">{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="chat-wrapper">
+  <form class="chat-form" method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" autocomplete="off" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input class="chat-button" type="submit" value="Log In" onclick="showLoadingSpinner()">
+  </form>
+</div>
+
+  <div id="loading-overlay" style="display: none;">
+		<div id="loading-spinner">
+			<div class="spinner"></div>
+		</div>
+    <p class="loading-message">Logging in...</p>
+	</div>
+  
+  <script src="../../static/scripts/script.js"></script>
+{% endblock %}

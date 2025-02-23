@@ -1,7 +1,9 @@
 flask
+flask_session
+flask_sqlalchemy
+flask_migrate
 gunicorn
-langchain
-langchainhub
-langchain-community
-langchain-ollama
 ollama
+requests
+redis
+psycopg2-binary

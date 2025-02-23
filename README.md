@@ -27,3 +27,6 @@ An AI doorman.
 ```
 docker compose up
 ```
+
+## Models
+go to <a href="https://ollama.com/library">Ollama Library</a> an pick the most suitable model.

@@ -1,6 +1,6 @@
 html {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background: #f3f1eb;
+    background: #efeadf;
     background-size: cover;
     min-height: 100vh;
 }
@@ -26,7 +26,6 @@ nav {
     padding: 0.5rem 1rem;
 }
 h1 {
-    margin: 0;
     color: #17363f;
 }
 nav h1 {
@@ -40,10 +39,23 @@ nav h1 a {
     justify-content: center;
     align-items: center;
 }
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
 
-nav ul li span, header .action {
-    display: block;
-    padding: 0.5rem;
+nav ul li span {
+    color: #f3f1eb;
+}
+
+nav ul li a {
+    color: #f3f1eb;
+    display: flex;
+    align-items: center;
+    margin-left: 0.8rem;
 }
 
 .flash {
@@ -101,6 +113,7 @@ nav ul li span, header .action {
 .chat-button {
     background-color: #17363f;
     color: #f3f1eb;
+    cursor: pointer;
 }
 
 @keyframes spin {
@@ -136,4 +149,42 @@ nav ul li span, header .action {
     font-size: 16px;
     margin-top: 10px;
     text-align: center;
+}
+
+.banner-wrapper {
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.banner > .phrase {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner > svg {
+    max-width:100%;
+}
+
+.banner > .phrase > h1 {
+    font-size: 3rem;
+}
+
+.call-to-action {
+    margin-top: 1rem;
+    background-color: #17363f;
+    color: #f3f1eb;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 10px;
+    text-decoration: none;
+    width: fit-content;
 }

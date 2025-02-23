@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block header %}
-
+    <h1>
+        Doorman Chat
+    </h1>
 {% endblock %}
 
 {% block content %}
@@ -9,13 +11,22 @@
         <form class="chat-form" method="post">
             <label for="user_input">Enter an input:</label>
             <input type="text" name="user_input">    
-            <input class="chat-button" type="submit" value="Submit">
+            <input class="chat-button" type="submit" value="Submit" onclick="showLoadingSpinner()">
         </form>
     </div>
 
     <div class="chat-answer">
         <p>
-            {{ response }}
+            {{ res['response'] }}
         </p>
     </div>
+
+    <div id="loading-overlay" style="display: none;">
+		<div id="loading-spinner">
+			<div class="spinner"></div>
+		</div>
+		<p class="loading-message">Generating Answer...</p>
+	</div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

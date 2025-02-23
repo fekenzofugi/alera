@@ -1,0 +1,8 @@
+FROM ollama/ollama
+
+COPY ./pull_model.sh /pull_model.sh
+COPY doorman.modelfile /doorman.modelfile
+
+RUN chmod +x /pull_model.sh
+
+ENTRYPOINT [ "./pull_model.sh" ]

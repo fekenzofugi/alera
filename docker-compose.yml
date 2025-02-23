@@ -3,7 +3,7 @@ services:
     container_name: portaai_web
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.app
     depends_on:
       - ollama
     ports:
@@ -18,7 +18,9 @@ services:
     pull_policy: always
     tty: true
     restart: unless-stopped
-    image: ollama/ollama:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama
     ports:
       - "11434:11434"
     environment:

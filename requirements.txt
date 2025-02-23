@@ -4,3 +4,4 @@ langchain
 langchainhub
 langchain-community
 langchain-ollama
+ollama

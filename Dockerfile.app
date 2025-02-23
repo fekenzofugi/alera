@@ -1,4 +1,4 @@
-FROM python:3.12-slim 
+FROM python:3.12-slim
 
 # Set the working directory
 WORKDIR /portaai
@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY service_entrypoint.sh /portaai
 COPY main.py /portaai/
+COPY doorman.modelfile /portaai/
 COPY app /portaai/app
 
 # Run the application

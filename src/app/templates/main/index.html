@@ -14,15 +14,26 @@
     </div>
 
     <div class="chat-answer">
-        {% if res['response'] %}
+        {% if res %}
             <p>
                 <strong>You:</strong> {{ user_input }} 
             </p>
             <p>
-                <strong>Doorman:</strong> {{ res['response'] }}
+                <strong>Doorman:</strong> {{ res }}
             </p>
         {% endif %}
     </div>
+
+    <audio controls>
+        <source src="{{ url_for('static', filename=audio_filename) }}" type="audio/mpeg">
+    </audio>
+
+    <script>
+        window.onload = function() {
+            var audio = document.querySelector('audio');
+            audio.play();
+        };
+    </script>
 
     <div id="loading-overlay" style="display: none;">
 		<div id="loading-spinner">

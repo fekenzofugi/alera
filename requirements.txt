@@ -7,3 +7,4 @@ ollama
 requests
 redis
 psycopg2-binary
+gtts

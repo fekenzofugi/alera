@@ -8,6 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(64), unique=True, index=True)
     password = db.Column(db.String(256))
+    chats = db.relationship('Chat', backref='author', lazy='dynamic')
 
     def __init__(self, username, email, password):
         self.set_username(username)

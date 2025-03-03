@@ -188,3 +188,9 @@ nav ul li a {
     text-decoration: none;
     width: fit-content;
 }
+
+.webcam-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

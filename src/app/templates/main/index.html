@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block content %}
+
+    <div class="webcam-container">
+        <video id="webcam" autoplay playsinline></video>
+    </div>
+
     <div class="chat-wrapper">
         <form class="chat-form" method="post">
             <label for="user_input">Enter an input:</label>
@@ -27,13 +32,6 @@
     <audio controls>
         <source src="{{ url_for('static', filename=audio_filename) }}" type="audio/mpeg">
     </audio>
-
-    <script>
-        window.onload = function() {
-            var audio = document.querySelector('audio');
-            audio.play();
-        };
-    </script>
 
     <div id="loading-overlay" style="display: none;">
 		<div id="loading-spinner">

@@ -8,3 +8,7 @@ requests
 redis
 psycopg2-binary
 gtts
+kagglehub
+tensorflow
+numpy   
+opencv-python

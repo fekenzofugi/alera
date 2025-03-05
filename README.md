@@ -4,7 +4,7 @@ An AI doorman.
 ## Checklist
 
 ### 0) Literature Seach
-- [] Find appropriate models for the project.
+- [ ] Find appropriate models for the project.
 
 ### 1) LLM Model
 - [x] Comparison between LLM models.
@@ -12,9 +12,9 @@ An AI doorman.
 - [ ] Make a transfer-learning to adapt the best model to our goal.
 
 ### 2) Speech Recognition & Speech Synthesis Models
-- [] Comparison between models.
-- [] Train or adapt a model for our purposes.
-- [] Make it Natural.
+- [ ] Comparison between models.
+- [ ] Train or adapt a model for our purposes.
+- [ ] Make it Natural.
 
 ### 3) Face Detection + Recognition -> Attendence
 - [ ] Face Detector.
@@ -32,6 +32,11 @@ An AI doorman.
 ```
 docker compose up
 ```
+or 
+```
+pip install -r requirements 
+```
+and run the main.py file.   
 
 ## Models
 go to <a href="https://ollama.com/library">Ollama Library</a> an pick the most suitable model.

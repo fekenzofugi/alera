@@ -10,6 +10,7 @@ An AI doorman.
 - [x] Comparison between LLM models.
 - [x] Create a modelfile.
 - [ ] Make a transfer-learning to adapt the best model to our goal.
+- [ ] Fine Tunning
 
 ### 2) Speech Recognition & Speech Synthesis Models
 - [ ] Comparison between models.

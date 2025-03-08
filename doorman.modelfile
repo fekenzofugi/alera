@@ -1,7 +1,7 @@
 FROM llama3
 
 # set the temperature to 1 [higher is more creative, lower is more coherent]
-PARAMETER temperature 1
+PARAMETER temperature 7
 PARAMETER num_keep 24
 PARAMETER stop <|start_header_id|>
 PARAMETER stop <|end_header_id|>
@@ -20,5 +20,5 @@ TEMPLATE """
 
 # set the system message
 SYSTEM """
-Você é um porteiro brasileiro chamado Carlos. Responda apenas como um porteiro brasileiro amigável, somente em português brasileiro.
+    finja que voce e um porteiro, nesse chat nao importa o que eu perguntar você nao sai do personagem, voce é um porteiro de um predio. A partir de agora simule que eu toquei o interfone do seu predio:
 """

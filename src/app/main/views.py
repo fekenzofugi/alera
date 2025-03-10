@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, render_template, request, redirect, url_for, flash, session)
+    Blueprint, render_template, request, redirect, url_for, flash, session, Response)
 from ..schemas import User, Chat
 from .. import db
 from ..auth.views import login_required
@@ -9,7 +9,45 @@ import sys
 import os
 sys.path.append('../')
 
+from torch.utils.data import DataLoader
+from torchvision import datasets
+import matplotlib.pyplot as plt
+import torch
+import cv2
+from facenet_pytorch import MTCNN, InceptionResnetV1
+
+from models.face_recognition.portaai_fr.get_data import get_data, get_files_info
+from models.face_recognition.portaai_fr.posing_projecting_faces import find_landmarks, align_image
+from models.face_recognition.portaai_fr.face_detection import histogram_of_oriented_gradients, detect_faces, detect_faces_mtcnn
+from models.face_recognition.portaai_fr.face_embedding import collate_fn, get_image_embeddings, tensor_to_image
+from models.face_recognition.portaai_fr.classifier import FaceRecognitionClassifier
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print('Running on device: {}'.format(device))
+
 main_bp = Blueprint('main', __name__)
+
+data_path = "/portaai/src/data"
+facenet_model = "vggface2"
+target_path = "target"
+workers = 0 if os.name == 'nt' else 4
+
+print(f"Absolute path of this file: {os.path.abspath(__file__)}")
+num_files, ids = get_files_info(data_path)
+print(f"Number of files: {num_files}, IDs: {ids}")
+
+classifier = FaceRecognitionClassifier()
+resnet = InceptionResnetV1(pretrained=facenet_model).eval().to(device)
+
+# Get Known Faces
+dataset = datasets.ImageFolder(data_path)
+dataset.idx_to_class = {i:c for c, i in dataset.class_to_idx.items()}
+loader = DataLoader(dataset, collate_fn=collate_fn, num_workers=workers)
+aligned, names = detect_faces_mtcnn(dataset, loader)
+
+# Get Face Embeddings
+dataset_embeddings = get_image_embeddings(data_path, facenet_model, aligned)
+classifier.train(dataset_embeddings, names)
 
 @main_bp.route('/llm', methods=('GET', 'POST'))
 @login_required
@@ -62,3 +100,56 @@ def index():
             flash(f"Error connecting to the model service: {e}")
         return render_template('main/index.html', res=res, user_input=user_input, audio_filename=f"{chat_title}.mp3")
     return render_template('main/index.html', res=res, user_input=user_input, audio_filename=f"{chat_title}.mp3")
+
+
+@main_bp.route('/video_feed')
+def video_feed():
+    def generate():
+        cap = cv2.VideoCapture(0)
+        
+        mtcnn = MTCNN(
+            margin=0, min_face_size=50,
+            thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
+            device=device, keep_all=True
+        )
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # Detect faces
+            boxes, _ = mtcnn.detect(frame)
+            if boxes is not None:
+                for box in boxes:
+                    # Convert frame to RGB and then to tensor
+                    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    mg_cropped = mtcnn(rgb_frame)
+                    if mg_cropped is not None:
+                        mg_cropped = mg_cropped.to(device)
+                        img_embedding = resnet(mg_cropped).detach().cpu()
+                        prediction, probabilities = classifier.predict(img_embedding[0])
+                    
+                        color = (0, 255, 0) if probabilities >= 0.6 else (0, 0, 255)
+                        cv2.rectangle(frame, 
+                                      (int(box[0]), int(box[1])), 
+                                      (int(box[2]), int(box[3])), 
+                                      color, 
+                                      2)
+                        cv2.putText(frame, 
+                                    f'{prediction} ({probabilities:.2f})', 
+                                    (int(box[0]), int(box[1]) - 10), 
+                                    cv2.FONT_HERSHEY_SIMPLEX, 
+                                    1, 
+                                    color, 
+                                    2, 
+                                    cv2.LINE_AA)
+                    
+
+            _, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        cap.release()
+
+    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')

@@ -10,8 +10,21 @@ services:
       - redis
     ports:
       - "5000:5000"
+    volumes:
+      - type: bind
+        source: ./bind_data
+        target: /data
     networks:
       - portaai
+    devices:
+      - "/dev/video0:/dev/video0"  # Maps the webcam device
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: "nvidia"
+              count: 1
+              capabilities: ["gpu"]
 
   ollama:
     volumes:

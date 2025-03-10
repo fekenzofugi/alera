@@ -12,3 +12,14 @@ kagglehub
 tensorflow
 numpy   
 opencv-python
+facenet-pytorch
+torch
+matplotlib
+scikit-learn
+scikit-image
+imutils
+pandas
+pillow
+scipy
+cmake==3.25.2
+dlib==19.24.2

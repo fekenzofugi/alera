@@ -5,39 +5,40 @@
 {% endblock %}
 
 {% block content %}
-
-    <h1>Live Video Feed</h1>
-    <img src="{{ url_for('main.video_feed') }}" alt="Video Feed">
-
-    <div class="chat-wrapper">
-        <form class="chat-form" method="post">
-            <label for="user_input">Enter an input:</label>
-            <input type="text" name="user_input">    
-            <input class="chat-button" type="submit" value="Submit" onclick="showLoadingSpinner()">
-        </form>
+    <div class="chat-container">
+        <h1>Live Video Feed</h1>
+        <img src="{{ url_for('main.video_feed') }}" alt="Video Feed">
+    
+        <div class="chat-wrapper">
+            <form class="chat-form" method="post">
+                <label for="user_input">Enter an input:</label>
+                <input type="text" name="user_input">    
+                <input class="chat-button" type="submit" value="Submit" onclick="showLoadingSpinner()">
+            </form>
+        </div>
+    
+        <div class="chat-answer">
+            {% if res %}
+                <p>
+                    <strong>You:</strong> {{ user_input }} 
+                </p>
+                <p>
+                    <strong>Doorman:</strong> {{ res }}
+                </p>
+            {% endif %}
+        </div>
+    
+        <audio controls>
+            <source src="{{ url_for('static', filename=audio_filename) }}" type="audio/mpeg">
+        </audio>
+    
+        <div id="loading-overlay" style="display: none;">
+            <div id="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+            <p class="loading-message">Generating Answer...</p>
+        </div>
     </div>
-
-    <div class="chat-answer">
-        {% if res %}
-            <p>
-                <strong>You:</strong> {{ user_input }} 
-            </p>
-            <p>
-                <strong>Doorman:</strong> {{ res }}
-            </p>
-        {% endif %}
-    </div>
-
-    <audio controls>
-        <source src="{{ url_for('static', filename=audio_filename) }}" type="audio/mpeg">
-    </audio>
-
-    <div id="loading-overlay" style="display: none;">
-		<div id="loading-spinner">
-			<div class="spinner"></div>
-		</div>
-		<p class="loading-message">Generating Answer...</p>
-	</div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}

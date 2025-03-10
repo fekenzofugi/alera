@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash, session, Response)
 from ..schemas import User, Chat
-from .. import db
+from app import db, facenet_model, workers, classifier, resnet
 from ..auth.views import login_required
 from utils.tts_v1 import text_to_speech_v1
 import requests
@@ -14,13 +14,10 @@ from torchvision import datasets
 import matplotlib.pyplot as plt
 import torch
 import cv2
-from facenet_pytorch import MTCNN, InceptionResnetV1
+from facenet_pytorch import MTCNN
 
-from models.face_recognition.portaai_fr.get_data import get_data, get_files_info
-from models.face_recognition.portaai_fr.posing_projecting_faces import find_landmarks, align_image
-from models.face_recognition.portaai_fr.face_detection import histogram_of_oriented_gradients, detect_faces, detect_faces_mtcnn
-from models.face_recognition.portaai_fr.face_embedding import collate_fn, get_image_embeddings, tensor_to_image
-from models.face_recognition.portaai_fr.classifier import FaceRecognitionClassifier
+from models.face_recognition.portaai_fr.face_detection import detect_faces_mtcnn
+from models.face_recognition.portaai_fr.face_embedding import collate_fn, get_image_embeddings
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 print('Running on device: {}'.format(device))
@@ -28,16 +25,9 @@ print('Running on device: {}'.format(device))
 main_bp = Blueprint('main', __name__)
 
 data_path = "/portaai/src/data"
-facenet_model = "vggface2"
-target_path = "target"
-workers = 0 if os.name == 'nt' else 4
 
-print(f"Absolute path of this file: {os.path.abspath(__file__)}")
-num_files, ids = get_files_info(data_path)
-print(f"Number of files: {num_files}, IDs: {ids}")
-
-classifier = FaceRecognitionClassifier()
-resnet = InceptionResnetV1(pretrained=facenet_model).eval().to(device)
+global main_cap
+main_cap = None
 
 # Get Known Faces
 dataset = datasets.ImageFolder(data_path)
@@ -105,8 +95,9 @@ def index():
 @main_bp.route('/video_feed')
 def video_feed():
     def generate():
-        cap = cv2.VideoCapture(0)
-        
+        global main_cap
+        main_cap = cv2.VideoCapture(0)
+
         mtcnn = MTCNN(
             margin=0, min_face_size=50,
             thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
@@ -114,7 +105,7 @@ def video_feed():
         )
 
         while True:
-            ret, frame = cap.read()
+            ret, frame = main_cap.read()
             if not ret:
                 break
 
@@ -150,6 +141,12 @@ def video_feed():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        cap.release()
+        main_cap.release()
 
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@main_bp.route('/cap_off', methods=('GET', 'POST'))
+def cap_off():
+    global main_cap
+    main_cap.release()
+    return redirect(url_for('auth.logout'))

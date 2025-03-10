@@ -4,6 +4,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_session import Session
 import redis
+import torch
+from facenet_pytorch import InceptionResnetV1
+
+from models.face_recognition.portaai_fr.classifier import FaceRecognitionClassifier
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+print('Running on device: {}'.format(device))
+
+facenet_model = "vggface2"
+workers = 0 if os.name == 'nt' else 4
+
+classifier = FaceRecognitionClassifier()
+resnet = InceptionResnetV1(pretrained=facenet_model).eval().to(device)
 
 db = SQLAlchemy()
 sess = Session()

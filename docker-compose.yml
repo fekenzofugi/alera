@@ -13,7 +13,7 @@ services:
     volumes:
       - type: bind
         source: ./bind_data
-        target: /data
+        target: /src/data
     networks:
       - portaai
     devices:

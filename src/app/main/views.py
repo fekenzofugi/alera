@@ -16,6 +16,7 @@ import torch
 import cv2
 from facenet_pytorch import MTCNN
 
+from models.face_recognition.portaai_fr.get_data import get_files_info
 from models.face_recognition.portaai_fr.face_detection import detect_faces_mtcnn
 from models.face_recognition.portaai_fr.face_embedding import collate_fn, get_image_embeddings
 
@@ -25,16 +26,19 @@ print('Running on device: {}'.format(device))
 main_bp = Blueprint('main', __name__)
 
 data_path = "/portaai/src/data"
+num_dirs = len([d for d in os.listdir(data_path) if os.path.isdir(os.path.join(data_path, d))])
+print(f"Number of directories in {data_path}: {num_dirs}")
 
-# Get Known Faces
-dataset = datasets.ImageFolder(data_path)
-dataset.idx_to_class = {i:c for c, i in dataset.class_to_idx.items()}
-loader = DataLoader(dataset, collate_fn=collate_fn, num_workers=workers)
-aligned, names = detect_faces_mtcnn(dataset, loader)
+if num_dirs > 1:
+    # Get Known Faces
+    dataset = datasets.ImageFolder(data_path)
+    dataset.idx_to_class = {i:c for c, i in dataset.class_to_idx.items()}
+    loader = DataLoader(dataset, collate_fn=collate_fn, num_workers=workers)
+    aligned, names = detect_faces_mtcnn(dataset, loader)
 
-# Get Face Embeddings
-dataset_embeddings = get_image_embeddings(data_path, facenet_model, aligned)
-classifier.train(dataset_embeddings, names)
+    # Get Face Embeddings
+    dataset_embeddings = get_image_embeddings(data_path, facenet_model, aligned)
+    classifier.train(dataset_embeddings, names)
 
 @main_bp.route('/llm', methods=('GET', 'POST'))
 @login_required

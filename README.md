@@ -117,6 +117,19 @@ Remove all volumes
 ```
 docker volume prune --all
 ```
+clean up / identify contents of ```/var/lib/docker/overlay``` (docker storage driver)
+```
+du -ahx / | sort -rh | head -50
+
+```
+```
+ls /var/lib/docker/overlay2
+```
+remove all contents in storage driver
+```
+docker buildx prune --all
+```
+
 
 ## Models
 go to <a href="https://ollama.com/library">Ollama Library</a> an pick the most suitable model.

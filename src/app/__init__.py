@@ -6,6 +6,7 @@ from flask_session import Session
 import redis
 import torch
 from facenet_pytorch import InceptionResnetV1
+import cv2
 
 from models.face_recognition.portaai_fr.classifier import FaceRecognitionClassifier
 
@@ -17,6 +18,9 @@ workers = 0 if os.name == 'nt' else 4
 
 classifier = FaceRecognitionClassifier()
 resnet = InceptionResnetV1(pretrained=facenet_model).eval().to(device)
+
+cap = cv2.VideoCapture(0)
+
 
 db = SQLAlchemy()
 sess = Session()

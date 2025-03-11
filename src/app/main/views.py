@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, render_template, request, redirect, url_for, flash, session, Response)
 from ..schemas import User, Chat
-from app import db, facenet_model, workers, classifier, resnet
+from app import db, facenet_model, workers, classifier, resnet, cap
 from ..auth.views import login_required
 from utils.tts_v1 import text_to_speech_v1
 import requests
@@ -25,9 +25,6 @@ print('Running on device: {}'.format(device))
 main_bp = Blueprint('main', __name__)
 
 data_path = "/portaai/src/data"
-
-global main_cap
-main_cap = None
 
 # Get Known Faces
 dataset = datasets.ImageFolder(data_path)
@@ -95,8 +92,6 @@ def index():
 @main_bp.route('/video_feed')
 def video_feed():
     def generate():
-        global main_cap
-        main_cap = cv2.VideoCapture(0)
 
         mtcnn = MTCNN(
             margin=0, min_face_size=50,
@@ -105,7 +100,7 @@ def video_feed():
         )
 
         while True:
-            ret, frame = main_cap.read()
+            ret, frame = cap.read()
             if not ret:
                 break
 
@@ -141,12 +136,5 @@ def video_feed():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        main_cap.release()
 
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@main_bp.route('/cap_off', methods=('GET', 'POST'))
-def cap_off():
-    global main_cap
-    main_cap.release()
-    return redirect(url_for('auth.logout'))

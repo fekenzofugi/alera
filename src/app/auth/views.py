@@ -3,7 +3,7 @@ from ..schemas import User
 from flask import (
     Blueprint, flash, redirect, render_template, request, url_for, session, Response
 )
-from app import db, facenet_model, workers, classifier
+from app import db, facenet_model, workers, classifier, cap
 import cv2
 import torch
 import os
@@ -26,7 +26,6 @@ global capture
 capture=False
 
 data_path = "/portaai/src/data"
-cap = cv2.VideoCapture(0)
 
 
 @auth_bp.route('/register', methods=('GET', 'POST'))
@@ -90,6 +89,8 @@ def login():
 def logout():
     session.pop('user_id', None)
     session.pop('username', None)
+    session.pop('regs_username', None)
+    session.pop('num_files', None)
     return redirect(url_for('landing.index'))
 
 def login_required(view):
@@ -116,7 +117,6 @@ def face_register():
 
     if request.method=='POST':
         if request.form.get('click') == 'Continue':
-            cap.release()
             # Get Known Faces
             dataset = datasets.ImageFolder(data_path)
             dataset.idx_to_class = {i:c for c, i in dataset.class_to_idx.items()}
@@ -131,7 +131,7 @@ def face_register():
 
     return render_template('auth/face_register.html', num_files=num_files)
 
-@auth_bp.route('/video_feed')
+@auth_bp.route('/auth_video_feed')
 def video_feed():
     def generate(username):
         global capture
@@ -152,7 +152,6 @@ def video_feed():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        cap.release()
 
     username = session.get('regs_username')
     return Response(generate(username), mimetype='multipart/x-mixed-replace; boundary=frame')

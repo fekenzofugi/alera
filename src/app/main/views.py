@@ -7,6 +7,7 @@ from utils.tts_v1 import text_to_speech_v1
 import requests
 import sys
 import os
+import json
 sys.path.append('../')
 
 from torch.utils.data import DataLoader
@@ -40,6 +41,8 @@ if num_dirs > 1:
     dataset_embeddings = get_image_embeddings(data_path, facenet_model, aligned)
     classifier.train(dataset_embeddings, names)
 
+from flask import Response, stream_with_context
+
 @main_bp.route('/llm', methods=('GET', 'POST'))
 @login_required
 def index():
@@ -59,38 +62,48 @@ def index():
         user_input = request.form['user_input']
         print(f"User input: {user_input}")
         messages = []
+
         if newest_chat:
             for chat in User.query.get(session['user_id']).chats.all():
-                messages.append({
-                    "role": "user",
-                    "content": chat.user_input
-                })
-                messages.append({
-                    "role": "assistant",
-                    "content": chat.text
-                })
-        try:
-            messages.append({
-                "role": "user",
-                "content": user_input
-            })
-            response = requests.post('http://ollama:11434/api/chat', json={
-                "messages": messages,
-                "stream" : False,
-                "model" : "myllama3",
-            }).json()
-            chat = Chat(author_id=session['user_id'], title=chat_title, text=response['message']['content'], user_input=user_input)
-            db.session.add(chat)
-            db.session.commit()
-            num_chats = User.query.get(session['user_id']).chats.count()
-            chat_title = f"audio{int(num_chats) - 1}"
-            text_to_speech_v1(response['message']['content'], audio_output_path, chat_title)
-            res = response['message']['content']
-            flash(f"{chat_title} saved successfully. Audio output path: {audio_output_path}. Number of files in audio output path: {len(os.listdir(audio_output_path))}. Files: {os.listdir(audio_output_path)}, {res}")
-        except Exception as e:
-            flash(f"Error connecting to the model service: {e}")
-        return render_template('main/index.html', res=res, user_input=user_input, audio_filename=f"{chat_title}.mp3")
+                messages.append({"role": "user", "content": chat.user_input})
+                messages.append({"role": "assistant", "content": chat.text})
+
+        messages.append({"role": "user", "content": user_input})
+
+        def generate_text():
+            try:
+                response = requests.post(
+                    'http://ollama:11434/api/chat', 
+                    json={"messages": messages, "stream": True, "model": "myllama3"},
+                    stream=True
+                )
+
+                collected_text = ""
+
+                for chunk in response.iter_lines():
+                    if chunk:
+                        chunk_data = chunk.decode('utf-8')
+                        chunk_data = json.loads(chunk_data)["message"]["content"]
+                        yield chunk_data
+                        collected_text += chunk_data
+                chat_title = f"audio{int(User.query.get(session['user_id']).chats.count())}"
+                # Save chat to database
+                chat = Chat(author_id=session['user_id'], title=chat_title, text=collected_text, user_input=user_input)
+                db.session.add(chat)
+                db.session.commit()
+
+                # Convert text to speech
+                num_chats = User.query.get(session['user_id']).chats.count()
+                chat_title = f"audio{int(num_chats) - 1}"
+                text_to_speech_v1(collected_text, audio_output_path, chat_title)
+
+            except Exception as e:
+                yield f"Error: {str(e)}"
+
+        return Response(stream_with_context(generate_text()), content_type='text/plain')
+
     return render_template('main/index.html', res=res, user_input=user_input, audio_filename=f"{chat_title}.mp3")
+
 
 
 @main_bp.route('/video_feed')

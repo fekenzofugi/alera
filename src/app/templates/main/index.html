@@ -10,23 +10,14 @@
         <img src="{{ url_for('main.video_feed') }}" alt="Video Feed">
     
         <div class="chat-wrapper">
-            <form class="chat-form" method="post">
+            <form id="chat-gen" class="chat-form" method="post">
                 <label for="user_input">Enter an input:</label>
                 <input type="text" name="user_input">    
-                <input class="chat-button" type="submit" value="Submit" onclick="showLoadingSpinner()">
+                <input class="chat-button" type="submit" value="Submit">
             </form>
         </div>
     
-        <div class="chat-answer">
-            {% if res %}
-                <p>
-                    <strong>You:</strong> {{ user_input }} 
-                </p>
-                <p>
-                    <strong>Doorman:</strong> {{ res }}
-                </p>
-            {% endif %}
-        </div>
+        <div class="chat-answer"></div>
     
         <audio controls>
             <source src="{{ url_for('static', filename=audio_filename) }}" type="audio/mpeg">

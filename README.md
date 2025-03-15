@@ -1,4 +1,9 @@
-# portaai 
+# alera 
+
+<div style="text-align: center;">
+  <img src="src/app/static/images/logo.jpg" alt="Logo" width="300" style="margin: auto;"/>
+</div>
+
 We are developing a virtual doorman with artificial intelligence that replaces the human doorman, enabling audio communication with visitors, facial recognition for residents, and authorization via a mobile app. It also detects suspicious behavior and sends security alerts.
 
 ## Checklist

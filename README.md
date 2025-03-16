@@ -9,30 +9,37 @@ We are developing a virtual doorman with artificial intelligence that replaces t
 ## Checklist
 
 ### 0) Literature Seach
-- [ ] Find appropriate models for the project.
+- [x] Find appropriate models for the project.
 
 ### 1) LLM Model
 - [x] Comparison between LLM models.
 - [x] Create a modelfile.
-- [ ] Make a transfer-learning to adapt the best model to our goal.
-- [ ] Fine Tunning
+- [ ] Parameters.
+- [ ] Fine Tunning.
 
-### 2) Speech Recognition & Speech Synthesis Models
+### 2) Face Detection + Recognition -> Attendence
+- [x] Face Detector.
+- [x] Register Users based on Face.
+- [x] Classification based on Face.
+
+### 3) Speech-to-Text
 - [ ] Comparison between models.
 - [ ] Train or adapt a model for our purposes.
-- [ ] Make it Natural.
+- [ ] Real-Time.
 
-### 3) Face Detection + Recognition -> Attendence
-- [ ] Face Detector.
-- [ ] Register Users based on Face.
-- [ ] Classification based on Face.
+### 4) Text-to-Speech 
+- [ ] Comparison between models.
+- [ ] Train or adapt a model for our purposes.
+- [ ] Real-Time.
+- [ ] Convert into packages. 
 
-### 4) Hardware Integration
-- [ ] Select an Intercom System.
-- [ ] Integrate the LLM model & Camera Model with intercom.
+### 5) Hardware Integration
+- [ ] esp32 collecting (microfone) and receiving (internet) audio packages from server in real time.
+- [ ] TDP (the Tag Distribution Protocol).
 
-### 5) Optimization
-- [ ] Make the system faster.
+### 6) Mobile Application
+- [ ] Integrate all functionalities with a mobile app.
+
 
 ## Run the app
 ```
@@ -125,7 +132,6 @@ docker volume prune --all
 clean up / identify contents of ```/var/lib/docker/overlay``` (docker storage driver)
 ```
 du -ahx / | sort -rh | head -50
-
 ```
 ```
 ls /var/lib/docker/overlay2
@@ -133,6 +139,10 @@ ls /var/lib/docker/overlay2
 remove all contents in storage driver
 ```
 docker buildx prune --all
+```
+removal everything
+```
+docker system prune -a
 ```
 
 

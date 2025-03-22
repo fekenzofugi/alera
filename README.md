@@ -42,6 +42,7 @@ We are developing a virtual doorman with artificial intelligence that replaces t
 
 
 ## Run the app
+A web application was made to test all the models and integrations.
 ```
 docker compose up
 ```

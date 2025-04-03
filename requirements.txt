@@ -21,5 +21,3 @@ imutils
 pandas
 pillow
 scipy
-cmake==3.25.2
-dlib==19.24.2

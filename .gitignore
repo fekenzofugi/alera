@@ -9,7 +9,7 @@ __pycache__/
 *.install
 
 # Other extensions
-
+*.mp4
 *.gif
 *.dat
 *.json
